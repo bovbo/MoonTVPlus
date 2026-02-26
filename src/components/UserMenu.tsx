@@ -161,7 +161,7 @@ export const UserMenu: React.FC = () => {
   });
 
   // 折叠面板状态
-  const [isDoubanSectionOpen, setIsDoubanSectionOpen] = useState(true);
+  const [isDoubanSectionOpen, setIsDoubanSectionOpen] = useState(false);
 
   // TMDB 图片设置
   const [tmdbImageBaseUrl, setTmdbImageBaseUrl] = useState('https://image.tmdb.org');
@@ -1637,7 +1637,7 @@ export const UserMenu: React.FC = () => {
                 <div className='flex items-center gap-2'>
                   <Globe className='w-5 h-5 text-gray-600 dark:text-gray-400' />
                   <h3 className='text-base font-semibold text-gray-800 dark:text-gray-200'>
-                    网络设置
+                    数据源设置
                   </h3>
                 </div>
                 {isDoubanSectionOpen ? (
