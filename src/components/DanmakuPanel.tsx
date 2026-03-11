@@ -166,7 +166,7 @@ export default function DanmakuPanel({
     <div className='flex h-full flex-col overflow-hidden'>
       {/* 搜索区域 - 固定在顶部 */}
       <div className='mb-4 flex-shrink-0'>
-        <div className='flex gap-2'>
+        <div className='flex flex-wrap gap-2'>
           <input
             type='text'
             value={searchKeyword}
@@ -183,7 +183,7 @@ export default function DanmakuPanel({
             spellCheck='false'
             data-form-type='other'
             data-lpignore='true'
-            className='flex-1 rounded-lg border border-gray-300 px-3 py-2 text-sm
+            className='flex-1 min-w-[220px] rounded-lg border border-gray-300 px-3 py-2 text-sm
                      transition-colors focus:border-green-500 focus:outline-none
                      focus:ring-2 focus:ring-green-500/20
                      dark:border-gray-600 dark:bg-gray-800 dark:text-white
@@ -193,18 +193,18 @@ export default function DanmakuPanel({
           <button
             onClick={() => handleSearch(searchKeyword)}
             disabled={isSearching}
-            className='flex items-center justify-center gap-2 rounded-lg bg-green-500 px-3 py-2
+            className='flex flex-shrink-0 items-center justify-center gap-2 rounded-lg bg-green-500 px-3 py-2
                      text-sm font-medium text-white transition-colors
                      hover:bg-green-600 disabled:cursor-not-allowed
                      disabled:opacity-50 dark:bg-green-600 dark:hover:bg-green-700
-                     sm:px-4 md:gap-2'
+                     lg:px-4 min-w-[44px]'
           >
             {isSearching ? (
               <div className='h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent' />
             ) : (
               <MagnifyingGlassIcon className='h-4 w-4' />
             )}
-            <span className='hidden sm:inline'>
+            <span className='hidden lg:inline'>
               {isSearching ? '搜索中...' : '搜索'}
             </span>
           </button>
