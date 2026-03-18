@@ -1,0 +1,16 @@
+/* 强制恢复所有元素的滚动条显示 */
+* {
+  -ms-overflow-style: auto !important;
+  scrollbar-width: auto !important;
+}
+
+*::-webkit-scrollbar {
+  display: block !important;
+  width: 10px !important;
+  height: 10px !important;
+}
+
+*::-webkit-scrollbar-thumb {
+  background: rgba(75, 85, 99, 0.4) !important;
+  border-radius: 6px !important;
+}
