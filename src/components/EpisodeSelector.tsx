@@ -12,6 +12,7 @@ import React, {
 
 import type { DanmakuComment,DanmakuSelection } from '@/lib/danmaku/types';
 import { generateStorageKey, getCachedPlayRecordsSnapshot } from '@/lib/db.client';
+import { isEpisodeHiddenByFilter } from '@/lib/episode-filter';
 import { loadAllLocalEpisodeProgressRecords } from '@/lib/episode-progress';
 import { EpisodeFilterConfig,SearchResult } from '@/lib/types';
 import { getVideoResolutionFromM3u8 } from '@/lib/utils';
@@ -249,29 +250,7 @@ const EpisodeSelector: React.FC<EpisodeSelectorProps> = ({
       // 获取集数标题
       const title = episodes_titles?.[episodeNumber - 1];
       if (!title) return false;
-
-      // 检查每个启用的规则
-      for (const rule of episodeFilterConfig.rules) {
-        if (!rule.enabled) continue;
-
-        try {
-          if (rule.type === 'normal') {
-            // 普通模式：字符串包含匹配
-            if (title.includes(rule.keyword)) {
-              return true;
-            }
-          } else if (rule.type === 'regex') {
-            // 正则模式：正则表达式匹配
-            if (new RegExp(rule.keyword).test(title)) {
-              return true;
-            }
-          }
-        } catch (e) {
-          console.error('集数过滤规则错误:', e);
-        }
-      }
-
-      return false;
+      return isEpisodeHiddenByFilter(title, episodeFilterConfig);
     },
     [episodeFilterConfig, episodes_titles]
   );

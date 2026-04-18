@@ -46,13 +46,14 @@ import {
   saveSkipConfig,
   subscribeToDataUpdates,
 } from '@/lib/db.client';
+import { getDoubanDetail } from '@/lib/douban.client';
+import { isEpisodeHiddenByFilter, normalizeEpisodeFilterConfig } from '@/lib/episode-filter';
 import {
   buildEpisodeProgressContentKey,
   loadLocalEpisodeProgress,
   pruneLocalEpisodeProgressStorage,
   saveLocalEpisodeProgress,
 } from '@/lib/episode-progress';
-import { getDoubanDetail } from '@/lib/douban.client';
 import { getTMDBImageUrl } from '@/lib/tmdb.search';
 import {
   getRecommendationCache,
@@ -543,10 +544,11 @@ function PlayPageClient() {
         // 加载集数过滤配置
         const episodeConfig = await getEpisodeFilterConfig();
         if (episodeConfig) {
-          setEpisodeFilterConfig(episodeConfig);
-          episodeFilterConfigRef.current = episodeConfig;
+          const normalizedEpisodeConfig = normalizeEpisodeFilterConfig(episodeConfig);
+          setEpisodeFilterConfig(normalizedEpisodeConfig);
+          episodeFilterConfigRef.current = normalizedEpisodeConfig;
         } else {
-          const defaultEpisodeConfig: EpisodeFilterConfig = { rules: [] };
+          const defaultEpisodeConfig: EpisodeFilterConfig = normalizeEpisodeFilterConfig();
           setEpisodeFilterConfig(defaultEpisodeConfig);
           episodeFilterConfigRef.current = defaultEpisodeConfig;
         }
@@ -4592,26 +4594,7 @@ function PlayPageClient() {
 
   // 检查集数是否被过滤
   const isEpisodeFilteredByTitle = (title: string): boolean => {
-    const filterConfig = episodeFilterConfigRef.current;
-    if (!filterConfig || filterConfig.rules.length === 0) {
-      return false;
-    }
-
-    for (const rule of filterConfig.rules) {
-      if (!rule.enabled) continue;
-
-      try {
-        if (rule.type === 'normal' && title.includes(rule.keyword)) {
-          return true;
-        }
-        if (rule.type === 'regex' && new RegExp(rule.keyword).test(title)) {
-          return true;
-        }
-      } catch (e) {
-        console.error('集数过滤规则错误:', e);
-      }
-    }
-    return false;
+    return isEpisodeHiddenByFilter(title, episodeFilterConfigRef.current);
   };
 
   const handleNextEpisode = async () => {

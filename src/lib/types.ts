@@ -253,6 +253,7 @@ export interface EpisodeFilterRule {
 // 集数过滤配置数据结构
 export interface EpisodeFilterConfig {
   rules: EpisodeFilterRule[]; // 过滤规则列表
+  reverseMode?: boolean; // 反向模式：开启后仅显示符合规则的集数
 }
 
 // 通知类型枚举

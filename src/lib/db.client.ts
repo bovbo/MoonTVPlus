@@ -15,6 +15,7 @@
  */
 
 import { getAuthInfoFromBrowserCookie, clearAuthCookie } from './auth';
+import { normalizeEpisodeFilterConfig } from './episode-filter';
 import { MangaReadRecord, MangaShelfItem } from './manga.types';
 import { DanmakuFilterConfig, EpisodeFilterConfig,SkipConfig } from './types';
 
@@ -2643,7 +2644,7 @@ export async function getEpisodeFilterConfig(): Promise<EpisodeFilterConfig | nu
   try {
     const raw = localStorage.getItem('moontv_episode_filter_config');
     if (!raw) return null;
-    return JSON.parse(raw) as EpisodeFilterConfig;
+    return normalizeEpisodeFilterConfig(JSON.parse(raw) as EpisodeFilterConfig);
   } catch (err) {
     console.error('读取集数过滤配置失败:', err);
     return null;
@@ -2662,10 +2663,11 @@ export async function saveEpisodeFilterConfig(
   }
 
   try {
-    localStorage.setItem('moontv_episode_filter_config', JSON.stringify(config));
+    const normalizedConfig = normalizeEpisodeFilterConfig(config);
+    localStorage.setItem('moontv_episode_filter_config', JSON.stringify(normalizedConfig));
     window.dispatchEvent(
       new CustomEvent('episodeFilterConfigUpdated', {
-        detail: config,
+        detail: normalizedConfig,
       })
     );
   } catch (err) {
